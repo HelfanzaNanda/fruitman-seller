@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">FruitmanSeller</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_sale">Proses Penjulan</string>
+    <string name="seller_order_in">Orderan masuk</string>
+    <string name="buyer_in_progress">Dalam Proses</string>
+    <string name="buyer_completed">Transaksi Sudah Selesai</string>
+    <string name="hellotext">Hello</string>
+    <string name="btn_create_store">Tambah Produk</string>
+    <string name="ask_delete">Apakah anda yakin ingin menghapus?</string>
+    <string name="delete">Hapus</string>
+    <string name="cancel">Batal</string>
+    <string name="title_activity_product">Produk</string>
+    <string name="add_product">Tambah produk</string>
+    <string name="edit_product">Edit produk</string>
+</resources>

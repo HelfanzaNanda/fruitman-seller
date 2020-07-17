@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#55E96A</color>
+    <color name="colorPrimaryDark">#28A2CF</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorGreen">#55E96A</color>
+    <color name="colorBlue">#28A2CF</color>
+    <color name="trandingStart">#55E96A</color>
+    <color name="colorFlueGreen">#03DAC5</color>
+    <color name="colorGreyDarker">#ACACAC</color>
+
+</resources>

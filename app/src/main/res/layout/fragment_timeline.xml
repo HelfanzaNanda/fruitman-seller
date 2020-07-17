@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F4F4"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layoutHeader">
+            <!-- android:background="@drawable/background_search_corner"-->
+            <com.github.florent37.shapeofview.shapes.ArcView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="0dp"
+                app:shape_arc_height="20dp"
+                app:shape_arc_position="bottom">
+
+                <FrameLayout
+                    android:background="@drawable/background_try"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"/>
+
+            </com.github.florent37.shapeofview.shapes.ArcView>
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_marginBottom="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/textHello"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:text="@string/hellotext"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_toEndOf="@id/textHello"
+                        android:id="@+id/textUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="Ikhwanudin"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="My product"
+                    android:layout_marginStart="15dp"
+                    android:textColor="@color/colorWhite">
+                </TextView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:background="@color/colorWhite"></View>
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_timeline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                </ScrollView>
+            </LinearLayout>
+
+        </RelativeLayout>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:layout_width="wrap_content"
+        android:id="@+id/fab_add_product"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        app:icon="@drawable/ic_add_white_24dp"
+        android:text="@string/btn_create_store"
+        android:layout_margin="16dp"
+        android:textAllCaps="false"
+        app:backgroundTint="@color/colorFlueGreen"
+        android:tint="#C3C1C1"
+        android:layout_height="wrap_content"/>
+    <ProgressBar
+        android:layout_centerInParent="true"
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>
+

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layoutHeader">
+            <!-- android:background="@drawable/background_search_corner"-->
+            <com.github.florent37.shapeofview.shapes.ArcView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="0dp"
+                app:shape_arc_height="20dp"
+                app:shape_arc_position="bottom">
+
+                <FrameLayout
+                    android:background="@drawable/background_try"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"/>
+
+            </com.github.florent37.shapeofview.shapes.ArcView>
+            <LinearLayout
+                android:layout_marginTop="25dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    android:textSize="30sp"
+                    android:text="Daftar Order"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <LinearLayout
+                    android:layout_below="@+id/layoutHeader"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_margin="16dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_marginTop="26dp"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorWhite"
+                            android:text="@string/title_sale"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_marginTop="16dp"
+                            app:cardCornerRadius="8dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:weightSum="3"
+                                android:padding="16dp"
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <LinearLayout
+                                    android:background="?attr/selectableItemBackground"
+                                    android:id="@+id/btn_seller_order_in"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content">
+                                    <ImageView
+                                        android:src="@drawable/orderin"
+                                        android:layout_width="64dp"
+                                        android:layout_height="64dp"/>
+                                    <TextView
+                                        android:textAlignment="center"
+                                        android:maxLines="2"
+                                        android:text="@string/seller_order_in"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:background="?attr/selectableItemBackground"
+                                    android:id="@+id/btn_seller_in_progress"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content">
+                                    <ImageView
+                                        android:src="@drawable/proses_pembelian"
+                                        android:layout_width="64dp"
+                                        android:layout_height="64dp"/>
+                                    <TextView
+                                        android:textAlignment="center"
+                                        android:maxLines="2"
+                                        android:text="@string/buyer_in_progress"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:background="?attr/selectableItemBackground"
+                                    android:id="@+id/btn_seller_completed"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content">
+                                    <ImageView
+                                        android:src="@drawable/agreement"
+                                        android:layout_width="64dp"
+                                        android:layout_height="64dp"/>
+                                    <TextView
+                                        android:textAlignment="center"
+                                        android:maxLines="2"
+                                        android:text="@string/buyer_completed"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+
+
+</RelativeLayout>
+
