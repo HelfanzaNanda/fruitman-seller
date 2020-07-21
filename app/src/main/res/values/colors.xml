@@ -9,5 +9,6 @@
     <color name="trandingStart">#55E96A</color>
     <color name="colorFlueGreen">#03DAC5</color>
     <color name="colorGreyDarker">#ACACAC</color>
+    <color name="colorPrimaryLight">#AEEA00</color>
 
 </resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="4dp"
+    app:cardCornerRadius="6dp"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:background="?attr/selectableItemBackground"
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/waiting_desc"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"
+            android:maxLines="5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/waiting_desc"
+            android:id="@+id/btn_decline"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="Cancel"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_marginEnd="5dp"
+            android:id="@+id/btn_confirmed"
+            android:layout_below="@id/waiting_desc"
+            android:layout_toStartOf="@id/btn_decline"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="Konfirmasi"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

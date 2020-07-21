@@ -4,6 +4,7 @@
     package="com.one.fruitmanseller">
 
     <dist:module dist:instant="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -11,30 +12,55 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:requestLegacyExternalStorage="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".ui.register.RegisterActivity">
-        </activity>
-        <activity android:name=".ui.login.LoginActivity" >
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".ui.splash.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
+            android:name=".ui.update_profile.UpdateProfilActivity"
+            android:label="@string/title_activity_update_profil"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.in_progress.InProgressActivity"
+            android:label="@string/title_activity_in_progress"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.complete.CompleteActivity"
+            android:label="@string/title_activity_complete"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.order_in.OrderInActivity"
+            android:label="@string/title_activity_order_in"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.register.RegisterActivity" />
+        <activity android:name=".ui.login.LoginActivity">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".ui.product.ProductActivity"
             android:label="@string/title_activity_product"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:name=".ui.product.ProductActivity" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:label=  "Fruitman Seller">
+            android:label="Fruitman Seller" />
 
-        </activity>
+        <service android:name=".utils.fcm.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

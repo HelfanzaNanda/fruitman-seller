@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "587073055852",
+    "firebase_url": "https://sellerfruitman.firebaseio.com",
+    "project_id": "sellerfruitman",
+    "storage_bucket": "sellerfruitman.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587073055852:android:e0224ed6ba4fb1d443bc49",
+        "android_client_info": {
+          "package_name": "com.one.fruitmanseller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "587073055852-du9l056rml10vtohpmdpor1icrrcomdf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.one.fruitmanseller",
+            "certificate_hash": "fc83fa41bf683546be11bc8fd92d9f557e9b55f2"
+          }
+        },
+        {
+          "client_id": "587073055852-udk62c2l0ap5e2me5hq5n4tpof6jm7j6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP_YBKNtabRQpZmWKI0f-FNrXNa-qIMDU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "587073055852-udk62c2l0ap5e2me5hq5n4tpof6jm7j6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

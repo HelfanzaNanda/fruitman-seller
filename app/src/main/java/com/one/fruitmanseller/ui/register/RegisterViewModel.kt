@@ -2,12 +2,14 @@ package com.one.fruitmanseller.ui.register
 
 import androidx.lifecycle.ViewModel
 import com.one.fruitmanseller.models.RegisterSeller
+import com.one.fruitmanseller.repositories.FirebaseRepository
 import com.one.fruitmanseller.repositories.SellerRepository
 import com.one.fruitmanseller.utils.Constants
 import com.one.fruitmanseller.utils.SingleLiveEvent
 import com.one.fruitmanseller.utils.SingleResponse
 
-class RegisterViewModel(private val sellerRepository: SellerRepository) : ViewModel(){
+class RegisterViewModel(private val sellerRepository: SellerRepository,
+                        private val firebaseRepository: FirebaseRepository) : ViewModel(){
     private val state : SingleLiveEvent<RegisterState> = SingleLiveEvent()
 
     private fun setLoading() { state.value = RegisterState.Loading(true) }
@@ -69,20 +71,34 @@ class RegisterViewModel(private val sellerRepository: SellerRepository) : ViewMo
         return true
     }
 
-    fun register(registerSeller: RegisterSeller){
-        setLoading()
-        sellerRepository.register(registerSeller, object : SingleResponse<RegisterSeller>{
-            override fun onSuccess(data: RegisterSeller?) {
-                hideLoading()
-                success(data!!.email!!)
+    private fun generateTokenFirebase(registerSeller: RegisterSeller){
+        firebaseRepository.generateToken(object : SingleResponse<String>{
+            override fun onSuccess(data: String?) {
+                registerSeller.fcmToken = data
+                sellerRepository.register(registerSeller, object : SingleResponse<RegisterSeller>{
+                    override fun onSuccess(data: RegisterSeller?) {
+                        hideLoading()
+                        success(data!!.email!!)
+                    }
+
+                    override fun onFailure(err: Error) {
+                        hideLoading()
+                        toast(err.message.toString())
+                    }
+
+                })
             }
 
             override fun onFailure(err: Error) {
-                hideLoading()
                 toast(err.message.toString())
             }
 
         })
+    }
+
+    fun register(registerSeller: RegisterSeller){
+        setLoading()
+        generateTokenFirebase(registerSeller)
     }
 
     fun listenToState() = state

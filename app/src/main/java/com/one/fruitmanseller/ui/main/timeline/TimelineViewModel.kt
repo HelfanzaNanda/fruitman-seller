@@ -3,7 +3,9 @@ package com.one.fruitmanseller.ui.main.timeline
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.one.fruitmanseller.models.Product
+import com.one.fruitmanseller.models.Seller
 import com.one.fruitmanseller.repositories.ProductRepository
+import com.one.fruitmanseller.repositories.SellerRepository
 import com.one.fruitmanseller.utils.ArrayResponse
 import com.one.fruitmanseller.utils.SingleLiveEvent
 import com.one.fruitmanseller.utils.SingleResponse
@@ -13,9 +15,11 @@ import okhttp3.RequestBody
 import java.io.File
 import java.sql.Time
 
-class TimelineViewModel (private val productRepository: ProductRepository) : ViewModel(){
+class TimelineViewModel (private val productRepository: ProductRepository,
+                         private val sellerRepository: SellerRepository) : ViewModel(){
     private val state : SingleLiveEvent<TimelineState> = SingleLiveEvent()
     private val products = MutableLiveData<List<Product>>()
+    private val currentUser = MutableLiveData<Seller>()
 
     private fun setLoading(){ state.value = TimelineState.Loading(true) }
     private fun hideLoading(){ state.value = TimelineState.Loading(false) }
@@ -38,8 +42,25 @@ class TimelineViewModel (private val productRepository: ProductRepository) : Vie
         })
     }
 
+    fun getCurrentUser(token: String){
+        setLoading()
+        sellerRepository.profile(token, object : SingleResponse<Seller>{
+            override fun onSuccess(data: Seller?) {
+                hideLoading()
+                data?.let { currentUser.postValue(it) }
+            }
+
+            override fun onFailure(err: Error) {
+                hideLoading()
+                toast(err.message.toString())
+            }
+
+        })
+    }
+
     fun listenToState() = state
     fun listenToProducts() = products
+    fun listenToCurrentUser() = currentUser
 }
 
 sealed class TimelineState{

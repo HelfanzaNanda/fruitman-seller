@@ -24,6 +24,24 @@ interface ApiService {
         @Body body: RequestBody
     ) : Call<WrappedResponse<RegisterSeller>>
 
+    @GET("api/seller/profile")
+    fun profile(
+        @Header("Authorization") token : String
+    ) : Call<WrappedResponse<Seller>>
+
+    @Headers("Content-Type: application/json")
+    @POST("api/seller/profile/update")
+    fun updateProfile(
+        @Header("Authorization") token : String,
+        @Body body: RequestBody
+    ) : Call<WrappedResponse<Seller>>
+
+    @Multipart
+    @POST("api/seller/profile/update/photo")
+    fun updatePhotoProfile(
+        @Header("Authorization") token : String,
+        @Part image : MultipartBody.Part
+    ) :Call<WrappedResponse<Seller>>
 
     @GET("api/seller/product/show")
     fun fetchProducts(
@@ -66,6 +84,34 @@ interface ApiService {
     fun fetchOrderIn(
         @Header("Authorization") token : String
     ) : Call<WrappedListResponse<Order>>
+
+    @GET("api/seller/order/inprogress")
+    fun fetchOrderInProgress(
+        @Header("Authorization") token : String
+    ) : Call<WrappedListResponse<Order>>
+
+    @GET("api/seller/order/complete")
+    fun fetchOrderComplete(
+        @Header("Authorization") token : String
+    ) : Call<WrappedListResponse<Order>>
+
+    @GET("api/seller/order/{id}/completed")
+    fun orderComplete(
+        @Header("Authorization") token : String,
+        @Path("id") id : Int
+    ) : Call<WrappedResponse<Order>>
+
+    @GET("api/seller/order/{id}/decline")
+    fun orderCancel(
+        @Header("Authorization") token : String,
+        @Path("id") id : Int
+    ) : Call<WrappedResponse<Order>>
+
+    @GET("api/seller/order/{id}/confirmed")
+    fun orderConfirmed(
+        @Header("Authorization") token : String,
+        @Path("id") id : Int
+    ) : Call<WrappedResponse<Order>>
 
 }
 data class WrappedResponse<T>(

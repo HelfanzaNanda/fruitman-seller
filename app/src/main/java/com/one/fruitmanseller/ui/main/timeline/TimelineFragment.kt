@@ -11,12 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fxn.pix.Pix
 import com.one.fruitmanseller.R
 import com.one.fruitmanseller.models.Product
+import com.one.fruitmanseller.models.Seller
 import com.one.fruitmanseller.ui.product.ProductActivity
 import com.one.fruitmanseller.utils.Constants
 import com.one.fruitmanseller.utils.extensions.gone
 import com.one.fruitmanseller.utils.extensions.showToast
 import com.one.fruitmanseller.utils.extensions.visible
+import kotlinx.android.synthetic.main.fragment_timeline.*
 import kotlinx.android.synthetic.main.fragment_timeline.view.*
+import kotlinx.android.synthetic.main.fragment_timeline.view.textUsername
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TimelineFragment : Fragment(R.layout.fragment_timeline){
@@ -42,6 +45,11 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline){
 
     private fun observe() {
         timelineViewModel.listenToProducts().observe(viewLifecycleOwner, Observer { handleProducts(it) })
+        timelineViewModel.listenToCurrentUser().observe(viewLifecycleOwner, Observer { handleCurrentUser(it) })
+    }
+
+    private fun handleCurrentUser(it: Seller?) {
+        it?.let { user-> textUsername.text = user.name }
     }
 
     private fun observer() {
@@ -70,5 +78,6 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline){
     override fun onResume() {
         super.onResume()
         timelineViewModel.fetchPrducts(Constants.getToken(requireActivity()))
+        timelineViewModel.getCurrentUser(Constants.getToken(requireActivity()))
     }
 }

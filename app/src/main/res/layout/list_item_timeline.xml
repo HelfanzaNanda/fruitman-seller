@@ -22,11 +22,12 @@
             android:layout_width="match_parent"
             android:layout_height="120dp"/>
         <TextView
+            android:textColor="#090909"
             android:textStyle="bold"
             android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
             android:text="Nama produk tebasan"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:id="@+id/txt_name"
             android:maxLines="2"
             android:layout_width="wrap_content"

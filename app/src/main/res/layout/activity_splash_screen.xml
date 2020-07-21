@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_try"
+    tools:context=".ui.splash.SplashScreen"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:textColor="@color/colorWhite"
+        android:id="@+id/textbuyer"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="Hello .."
+        android:textSize="25dp"
+        android:textStyle="italic|bold" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="391dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/fruitman" />
+
+    <TextView
+        android:textColor="@color/colorWhite"
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/product"
+        android:gravity="center"
+        android:text="FruitMan"
+        android:textSize="65dp"
+        android:textStyle="italic|bold" />
+
+    <TextView
+        android:textColor="@color/colorWhite"
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:fontFamily="@font/poppinsreguler"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="jual hasil panen tebasan lebih mudah disini" />
+
+</LinearLayout>

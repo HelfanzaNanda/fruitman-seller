@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="20dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -33,7 +34,7 @@
             app:errorEnabled="true"
             app:boxBackgroundColor="@android:color/transparent"
             android:id="@+id/til_name"
-            android:hint="Nama produk"
+            android:hint="Masukan nama produk"
             android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -46,7 +47,7 @@
             app:errorEnabled="true"
             app:boxBackgroundColor="@android:color/transparent"
             android:id="@+id/til_price"
-            android:hint="Harga produk"
+            android:hint="Masukan harga produk"
             android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputEditText
                 android:inputType="number"
@@ -60,7 +61,7 @@
             android:layout_width="match_parent"
             android:id="@+id/til_address"
             app:errorEnabled="true"
-            android:hint="Alamat produk"
+            android:hint="Masukan alamat lengkap produk"
             app:boxBackgroundColor="@android:color/transparent"
             android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputEditText
@@ -74,7 +75,7 @@
         <com.google.android.material.textfield.TextInputLayout
             app:errorEnabled="true"
             android:id="@+id/til_description"
-            android:hint="Deskripsi Produk"
+            android:hint="Masukan Deskripsi Produk"
             app:boxBackgroundColor="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

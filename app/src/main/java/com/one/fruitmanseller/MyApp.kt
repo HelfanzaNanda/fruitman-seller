@@ -2,13 +2,19 @@ package com.one.fruitmanseller
 
 import android.app.Application
 import com.one.fruitmanseller.models.Seller
+import com.one.fruitmanseller.repositories.FirebaseRepository
 import com.one.fruitmanseller.repositories.OrderRepository
 import com.one.fruitmanseller.repositories.ProductRepository
 import com.one.fruitmanseller.repositories.SellerRepository
+import com.one.fruitmanseller.ui.complete.CompleteViewModel
+import com.one.fruitmanseller.ui.in_progress.InProgressViewModel
 import com.one.fruitmanseller.ui.login.LoginViewModel
+import com.one.fruitmanseller.ui.main.profile.ProfileViewModel
 import com.one.fruitmanseller.ui.main.timeline.TimelineViewModel
+import com.one.fruitmanseller.ui.order_in.OrderInViewModel
 import com.one.fruitmanseller.ui.product.ProductViewModel
 import com.one.fruitmanseller.ui.register.RegisterViewModel
+import com.one.fruitmanseller.ui.update_profile.UpdateProfilViewModel
 import com.one.fruitmanseller.webservices.ApiClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -30,6 +36,7 @@ class MyApp : Application(){
 
 val retrofitModule = module {
     single { ApiClient.instance() }
+    single { FirebaseRepository() }
 }
 
 val repositoryModules = module {
@@ -39,9 +46,15 @@ val repositoryModules = module {
 }
 
 val viewModelModules = module {
-    viewModel { RegisterViewModel(get()) }
+    viewModel { RegisterViewModel(get(),get()) }
     viewModel { LoginViewModel(get()) }
+    viewModel { ProfileViewModel(get()) }
+    viewModel { UpdateProfilViewModel(get()) }
 
-    viewModel { TimelineViewModel(get()) }
+    viewModel { TimelineViewModel(get(), get()) }
     viewModel { ProductViewModel(get()) }
+
+    viewModel { CompleteViewModel(get()) }
+    viewModel { InProgressViewModel(get()) }
+    viewModel { OrderInViewModel(get()) }
 }

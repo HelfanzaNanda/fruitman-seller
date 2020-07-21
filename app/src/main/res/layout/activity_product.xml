@@ -20,7 +20,8 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_product"/>
+    <include
+        layout="@layout/content_product"/>
 
     <ProgressBar
         android:visibility="gone"
