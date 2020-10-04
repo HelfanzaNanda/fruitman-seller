@@ -21,6 +21,7 @@ interface SellerContract{
     fun profile(token : String, listener: SingleResponse<Seller>)
     fun updateProfile(token : String, seller: Seller, listener: SingleResponse<Seller>)
     fun updatePhotoProfile(token: String, pathImage : String, listener: SingleResponse<Seller>)
+    fun forgotPassword(email: String, listener: SingleResponse<Seller>)
 }
 
 class SellerRepository (private val api : ApiService) : SellerContract{
@@ -132,6 +133,34 @@ class SellerRepository (private val api : ApiService) : SellerContract{
                         }
                     }
                     !response.isSuccessful -> listener.onFailure(Error(response.message()))
+                }
+            }
+
+        })
+    }
+
+    override fun forgotPassword(email: String, listener: SingleResponse<Seller>) {
+        api.forgotPassword(email).enqueue(object : Callback<WrappedResponse<Seller>>{
+            override fun onFailure(call: Call<WrappedResponse<Seller>>, t: Throwable) {
+                listener.onFailure(Error(t.message))
+            }
+
+            override fun onResponse(
+                call: Call<WrappedResponse<Seller>>,
+                response: Response<WrappedResponse<Seller>>
+            ) {
+                when{
+                    response.isSuccessful -> {
+                        val body = response.body()
+                        if (body?.status!!){
+                            listener.onSuccess(body.data)
+                        }else{
+                            listener.onFailure(Error(body.message))
+                        }
+                    }
+                    !response.isSuccessful -> {
+                        listener.onFailure(Error(response.message()))
+                    }
                 }
             }
 

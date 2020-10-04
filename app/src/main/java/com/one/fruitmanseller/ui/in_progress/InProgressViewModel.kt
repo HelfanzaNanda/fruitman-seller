@@ -49,6 +49,8 @@ class InProgressViewModel (private val orderRepository: OrderRepository) : ViewM
     }
 
     fun cancel(token: String, id : String){
+        println(token)
+        println(id)
         setLoading()
         orderRepository.cancel(token, id, object : SingleResponse<Order> {
             override fun onSuccess(data: Order?) {

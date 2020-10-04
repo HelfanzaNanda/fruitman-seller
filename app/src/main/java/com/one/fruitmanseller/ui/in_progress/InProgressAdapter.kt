@@ -3,7 +3,6 @@ package com.one.fruitmanseller.ui.in_progress
 import android.annotation.SuppressLint
 import com.one.fruitmanseller.utils.extensions.visible
 import kotlinx.android.synthetic.main.list_item_in_progress.view.*
-import kotlinx.android.synthetic.main.list_item_order_in.view.btn_decline
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -31,18 +30,18 @@ class InProgressAdapter (private var orders : MutableList<Order>,
         fun bind(order: Order, context: Context, inProgressViewModel: InProgressViewModel){
             with(itemView){
                 if (order.arrive == false){
-                    tv_desc.text = "${order.buyer.name} sedang menuju tempat anda, untuk melakukan transaksi ${order.product.name}"
+                    tv_desc.text = "${order.buyer.name} sedang menuju tempat anda, untuk melakukan transaksi ${order.product.name} , silahkan tunggu"
                 }else if (order.arrive == true){
                     tv_desc.text = "status transaksi dengan ${order.buyer.name} dengan ${order.product.name} setelah bertemu di tempat"
                     btn_completed.visible()
                     btn_decline.visible()
                     btn_completed.setOnClickListener {
                         val token  = Constants.getToken(context)
-                        val mesage  = "apakah anda yakin ini sudah selesai?"
+                        val mesage  = "apakah transaksi selesai?"
                         context.AlertComplete(mesage, token, order.id.toString(), inProgressViewModel)
                     }
                     btn_decline.setOnClickListener {
-                        val message ="apakah anda yakin ingin menolak pesanan ini?"
+                        val message ="apakah pengepul tidak jadi membeli produk?"
                         val token = Constants.getToken(context)
                         context.AlertCancel(message, token, order.id.toString(), inProgressViewModel)
                     }

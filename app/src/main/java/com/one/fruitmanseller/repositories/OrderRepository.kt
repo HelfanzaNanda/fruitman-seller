@@ -18,6 +18,7 @@ interface OrderContract{
     fun confirm(token: String, id : String, listener: SingleResponse<Order>)
     fun complete(token: String, id : String, listener: SingleResponse<Order>)
 }
+
 class OrderRepository (private val api : ApiService) : OrderContract {
     override fun fetchOrderIn(token: String, listener: ArrayResponse<Order>) {
         api.fetchOrderIn(token).enqueue(object : Callback<WrappedListResponse<Order>>{
@@ -62,7 +63,6 @@ class OrderRepository (private val api : ApiService) : OrderContract {
                     !response.isSuccessful -> listener.onFailure(Error(response.message()))
                 }
             }
-
         })
     }
 

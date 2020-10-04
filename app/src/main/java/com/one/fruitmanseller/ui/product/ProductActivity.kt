@@ -6,13 +6,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import coil.api.load
 import com.fxn.pix.Options
 import com.fxn.pix.Pix
+import com.google.gson.GsonBuilder
 import com.one.fruitmanseller.R
+import com.one.fruitmanseller.models.Fruit
 import com.one.fruitmanseller.models.Product
+import com.one.fruitmanseller.models.SubDistrict
+import com.one.fruitmanseller.ui.maps.Coordinate
+import com.one.fruitmanseller.ui.maps.MapsActivity
 import com.one.fruitmanseller.utils.Constants
 import com.one.fruitmanseller.utils.extensions.showToast
 import kotlinx.android.synthetic.main.activity_product.*
@@ -22,7 +30,10 @@ import java.io.File
 
 class ProductActivity : AppCompatActivity() {
 
-    private val IMAGE_REQ_CODE = 101
+    companion object{
+        private const val IMAGE_REQ_CODE = 101
+        private const val RESULT_MAPS = 69
+    }
     private val productViewModel: ProductViewModel by viewModel()
     private var imageUrl = ""
 
@@ -34,6 +45,7 @@ class ProductActivity : AppCompatActivity() {
         observer()
         fill()
         pickImage()
+        goToMapsActivity()
     }
 
     private fun pickImage (){
@@ -47,7 +59,60 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun observer() {
-        productViewModel.listenToState().observer(this, Observer { handleUiState(it) })
+        observeState()
+        observeFruits()
+        observeSubDistricts()
+    }
+
+
+    private fun observeState() = productViewModel.listenToState().observer(this, Observer { handleUiState(it) })
+    private fun observeSubDistricts() = productViewModel.listenToSubDistricts().observe(this, Observer { handleSubDistricts(it) })
+    private fun observeFruits() = productViewModel.listenToFruits().observe(this, Observer { handleFruits(it) })
+
+    private fun setIdSubDistrict(subDIstrictId : String) = productViewModel.setIdSubDistrict(subDIstrictId)
+    private fun setIdFruit(fruitId : String) = productViewModel.setIdFruit(fruitId)
+    private fun getIdSubDIstrict() = productViewModel.getIdSubDistrict().value
+    private fun getIdFruit() = productViewModel.getIdFruit().value
+    private fun fetchFruits() = productViewModel.fetchFruits(Constants.getToken(this@ProductActivity))
+    private fun fetchSubdistricts() = productViewModel.fetchSubdistricts(Constants.getToken(this@ProductActivity))
+
+    private fun handleSubDistricts(list: List<SubDistrict>?) {
+        list?.let { lisSubDistrict ->
+            val subDistrictNames = mutableListOf<String>()
+            lisSubDistrict.map { subDistrictNames.add(it.name!!) }
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, subDistrictNames)
+                .apply {
+                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                }
+            spinner_sub_district.adapter = adapter
+            spinner_sub_district.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val filterDistrict = lisSubDistrict.find { subDistrict -> subDistrict.name == subDistrictNames[position] }
+                    setIdSubDistrict(filterDistrict!!.id.toString())
+                }
+            }
+        }
+    }
+
+    private fun handleFruits(listFruit: List<Fruit>) {
+        val distinctFruit = listFruit.distinctBy { fruit -> fruit.name  }
+        val fruitNames = mutableListOf<String>()
+        distinctFruit.map { fruitNames.add(it.name!!) }
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, fruitNames)
+            .apply {
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
+        spinner_fruit.adapter = adapter
+        spinner_fruit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val fruit = listFruit.find { fruit ->fruit.name == fruitNames[position]  }
+                setIdFruit(fruit!!.id.toString())
+            }
+        }
     }
 
     private fun fill(){
@@ -59,8 +124,12 @@ class ProductActivity : AppCompatActivity() {
                 val price = et_price.text.toString().trim()
                 val desc = et_description.text.toString().trim()
                 val address = et_address.text.toString().trim()
+                val lat = productViewModel.getLat().value
+                val lng = productViewModel.getLng().value
                 if (productViewModel.validate(name, price, desc,  address, imageUrl)){
-                    val productToSend = Product(name = name, price = price.toInt(), address = address, description = desc)
+                    val productToSend = Product(name = name, price = price.toInt(),
+                        address = address, description = desc, lat = lat, lng = lng,
+                    subdistrict_id = getIdSubDIstrict(), fruit_id = getIdFruit())
                     productViewModel.createProduct(token, productToSend, imageUrl)
                 }else{
                     showInfoAlert("Not valid")
@@ -76,8 +145,12 @@ class ProductActivity : AppCompatActivity() {
                 val price = et_price.text.toString().trim()
                 val desc = et_description.text.toString().trim()
                 val address = et_address.text.toString().trim()
+                val lat = productViewModel.getLat().value
+                val lng = productViewModel.getLng().value
                 if (productViewModel.validate(name, price, desc,  address, null)){
-                    val productToSend = Product(name = name, price = price.toInt(), address = address, description = desc)
+                    val productToSend = Product(name = name, price = price.toInt(),
+                        address = address, description = desc, lat = lat, lng = lng,
+                        subdistrict_id = getIdSubDIstrict(), fruit_id = getIdFruit())
                     productViewModel.updateProduct(token, getPassedProduct()?.id.toString(), productToSend, imageUrl)
                 }else{
                     showInfoAlert("Not valid")
@@ -157,6 +230,8 @@ class ProductActivity : AppCompatActivity() {
                 btn_submit.isEnabled = true
             }
         }
+        if(requestCode == RESULT_MAPS && resultCode == Activity.RESULT_OK && data != null) onLatLngReturned(data)
+
     }
 
     private fun showInfoAlert(message: String){
@@ -181,11 +256,19 @@ class ProductActivity : AppCompatActivity() {
 
     private fun isInsert() = intent.getBooleanExtra("IS_INSERT", true)
     private fun getPassedProduct() : Product? = intent.getParcelableExtra("PRODUCT")
+    private fun getPassedCoordinate(data: Intent) : Coordinate? = data.getParcelableExtra("RESULT_COORDINATE")
     private fun setNameErr(err : String?) { til_name.error = err }
     private fun setPriceErr(err : String?) { til_price.error = err }
     private fun setAddressErr(err : String?) { til_address.error = err }
     private fun setDescErr(err : String?) { til_description.error = err }
     private fun setImageErr(err : String?) { showInfoAlert(err.toString()) }
+    private fun onLatLngReturned(data: Intent) = productViewModel.setLatLng(getPassedCoordinate(data)!!.lat!!, getPassedCoordinate(data)!!.lng!!)
+
+    private fun goToMapsActivity() {
+        btn_to_maps.setOnClickListener {
+            startActivityForResult(Intent(this@ProductActivity, MapsActivity::class.java), RESULT_MAPS)
+        }
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
@@ -203,5 +286,11 @@ class ProductActivity : AppCompatActivity() {
             return true
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fetchFruits()
+        fetchSubdistricts()
     }
 }

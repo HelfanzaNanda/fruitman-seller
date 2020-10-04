@@ -12,6 +12,9 @@ data class Product(
     @SerializedName ("description") var description : String? = null,
     @SerializedName ("address") var address : String? = null,
     @SerializedName ("price") var price : Int? = null,
-    @SerializedName ("status") var status : String? = null
-
+    @SerializedName("lat") var lat : String? = null,
+    @SerializedName("lng") var lng : String? = null,
+    @SerializedName ("status") var status : String? = null,
+    @SerializedName ("subdistrict_id") var subdistrict_id : String? = null,
+    @SerializedName ("fruit_id") var fruit_id : String? = null
 ) : Parcelable

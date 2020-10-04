@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import coil.api.load
 import com.one.fruitmanseller.R
 import com.one.fruitmanseller.models.Seller
 import com.one.fruitmanseller.ui.login.LoginActivity
@@ -43,6 +44,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
     private fun observe() = profileViewModel.listenToUser().observe(requireActivity(), Observer { handleUser(it) })
 
     private fun handleUser(seller: Seller) {
+        iv_user.load(seller.image)
         txt_name.text = seller.name
         txt_email.text = seller.email
         txt_address.text = seller.address

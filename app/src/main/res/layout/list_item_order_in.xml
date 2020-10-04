@@ -27,7 +27,8 @@
             android:id="@+id/btn_decline"
             android:textAllCaps="false"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:text="Cancel"
+            android:text="Tolak"
+            android:textColor="#FF1744"
             android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

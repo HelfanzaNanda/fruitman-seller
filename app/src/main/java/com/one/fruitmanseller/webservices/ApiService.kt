@@ -1,10 +1,7 @@
 package com.one.fruitmanseller.webservices
 
 import com.google.gson.annotations.SerializedName
-import com.one.fruitmanseller.models.Order
-import com.one.fruitmanseller.models.Product
-import com.one.fruitmanseller.models.RegisterSeller
-import com.one.fruitmanseller.models.Seller
+import com.one.fruitmanseller.models.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -42,6 +39,23 @@ interface ApiService {
         @Header("Authorization") token : String,
         @Part image : MultipartBody.Part
     ) :Call<WrappedResponse<Seller>>
+
+    @FormUrlEncoded
+    @POST("api/seller/password/email")
+    fun forgotPassword(
+        @Field("email") email : String
+    ) :Call<WrappedResponse<Seller>>
+
+    @GET("api/seller/subdistrict")
+    fun fetchSubDistricts(
+        @Header("Authorization") token : String
+    ) : Call<WrappedListResponse<SubDistrict>>
+
+    @GET("api/seller/fruit")
+    fun fetchFruits(
+        @Header("Authorization") token : String
+    ) : Call<WrappedListResponse<Fruit>>
+
 
     @GET("api/seller/product/show")
     fun fetchProducts(

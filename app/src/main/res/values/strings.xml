@@ -27,4 +27,6 @@
     <string name="title_activity_complete">CompleteActivity</string>
     <string name="title_activity_in_progress">InProgressActivity</string>
     <string name="title_activity_update_profil">UpdateProfilActivity</string>
+
+    <string name="mapbox_access_token">pk.eyJ1IjoiaWtod2FuZG4iLCJhIjoiY2tmbm8zNHE5MHZuMjJ1cDJ3N3gwZ2x3ZCJ9.9ofDwsWSacyRDznAlFkqew</string>
 </resources>

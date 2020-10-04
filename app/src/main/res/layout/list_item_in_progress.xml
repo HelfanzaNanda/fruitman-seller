@@ -29,12 +29,14 @@
             android:textAllCaps="false"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:text="Complete"
+            android:layout_marginEnd="5dp"
             android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <com.google.android.material.button.MaterialButton
             android:visibility="gone"
+            android:textColor="#F50057"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/tv_desc"
             android:id="@+id/btn_decline"

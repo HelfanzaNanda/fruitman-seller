@@ -2,6 +2,7 @@ package com.one.fruitmanseller.ui.register
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import com.one.fruitmanseller.R
 import com.one.fruitmanseller.models.RegisterSeller
@@ -66,9 +67,16 @@ class RegisterActivity : AppCompatActivity() {
         validate.phone?.let { setPhoneError(it) }
     }
 
-    private fun handleSuccess(email: String) {
-        AlertRegister(email)
-        finish()
+    private fun handleSuccess(email: String) = alert(email)
+
+    private fun alert(message : String){
+        AlertDialog.Builder(this).apply {
+            setMessage(message)
+            setPositiveButton("ya"){dialog, _ ->
+                dialog.dismiss()
+                finish()
+            }
+        }.show()
     }
 
     private fun handleLoading(state: Boolean) {

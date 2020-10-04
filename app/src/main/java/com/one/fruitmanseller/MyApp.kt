@@ -2,11 +2,9 @@ package com.one.fruitmanseller
 
 import android.app.Application
 import com.one.fruitmanseller.models.Seller
-import com.one.fruitmanseller.repositories.FirebaseRepository
-import com.one.fruitmanseller.repositories.OrderRepository
-import com.one.fruitmanseller.repositories.ProductRepository
-import com.one.fruitmanseller.repositories.SellerRepository
+import com.one.fruitmanseller.repositories.*
 import com.one.fruitmanseller.ui.complete.CompleteViewModel
+import com.one.fruitmanseller.ui.forgot_password.ForgotPasswordViewModel
 import com.one.fruitmanseller.ui.in_progress.InProgressViewModel
 import com.one.fruitmanseller.ui.login.LoginViewModel
 import com.one.fruitmanseller.ui.main.profile.ProfileViewModel
@@ -43,6 +41,8 @@ val repositoryModules = module {
     factory { SellerRepository(get()) }
     factory { ProductRepository(get()) }
     factory { OrderRepository(get()) }
+    factory { SubDistrictRepository(get()) }
+    factory { FruitRepository(get()) }
 }
 
 val viewModelModules = module {
@@ -52,7 +52,8 @@ val viewModelModules = module {
     viewModel { UpdateProfilViewModel(get()) }
 
     viewModel { TimelineViewModel(get(), get()) }
-    viewModel { ProductViewModel(get()) }
+    viewModel { ProductViewModel(get(), get(), get()) }
+    viewModel { ForgotPasswordViewModel(get()) }
 
     viewModel { CompleteViewModel(get()) }
     viewModel { InProgressViewModel(get()) }

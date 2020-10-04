@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import com.one.fruitmanseller.R
+import com.one.fruitmanseller.ui.forgot_password.ForgotPasswordActivity
 import com.one.fruitmanseller.ui.main.MainActivity
 import com.one.fruitmanseller.ui.register.RegisterActivity
 import com.one.fruitmanseller.utils.Constants
@@ -25,6 +26,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         supportActionBar?.hide()
         btn_goto_register.setOnClickListener { startActivity(Intent(this@LoginActivity, RegisterActivity::class.java)) }
+        txt_forgot_password.setOnClickListener { startActivity(Intent(this,ForgotPasswordActivity::class.java)) }
         observer()
         login()
     }

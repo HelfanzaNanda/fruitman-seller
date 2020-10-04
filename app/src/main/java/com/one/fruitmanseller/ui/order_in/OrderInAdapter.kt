@@ -39,7 +39,7 @@ class OrderInAdapter (private var orders : MutableList<Order>,
                         context.AlertConfirm(message, token, order.id.toString(), orderInViewModel)
                     }
                     btn_decline.setOnClickListener {
-                        val message = "apakah anda yakin akan mengkonfirmasi pesanan ini?"
+                        val message = "apakah anda yakin akan menolak pesanan ini?"
                         val token  = Constants.getToken(context)
                         context.AlertCancel(message, token, order.id.toString(), orderInViewModel)
                     }

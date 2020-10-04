@@ -7,6 +7,7 @@ import com.one.fruitmanseller.repositories.SellerRepository
 import com.one.fruitmanseller.utils.Constants
 import com.one.fruitmanseller.utils.SingleLiveEvent
 import com.one.fruitmanseller.utils.SingleResponse
+import org.koin.ext.isInt
 
 class RegisterViewModel(private val sellerRepository: SellerRepository,
                         private val firebaseRepository: FirebaseRepository) : ViewModel(){
@@ -21,6 +22,11 @@ class RegisterViewModel(private val sellerRepository: SellerRepository,
         state.value = RegisterState.Reset
         if (name.isEmpty()){
             state.value = RegisterState.Validate(name = "nama tidak boleh kosong")
+            return false
+        }
+
+        if (!Constants.isAlpha(name)){
+            state.value = RegisterState.Validate(name = "nama hanya mengandung huruf saja")
             return false
         }
 

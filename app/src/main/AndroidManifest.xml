@@ -6,17 +6,20 @@
     <dist:module dist:instant="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".MyApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@drawable/fruitman"
+        android:label="Penebas Fruitman"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.maps.MapsActivity"/>
+        <activity android:name=".ui.forgot_password.ForgotPasswordActivity" />
         <activity android:name=".ui.splash.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,27 +29,30 @@
         </activity>
         <activity
             android:name=".ui.update_profile.UpdateProfilActivity"
-            android:label="@string/title_activity_update_profil"
+            android:label="Edit profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.in_progress.InProgressActivity"
-            android:label="@string/title_activity_in_progress"
+            android:label="Daftar Dalam Proses"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.complete.CompleteActivity"
-            android:label="@string/title_activity_complete"
+            android:label="Daftar Transaksi Selesai"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.order_in.OrderInActivity"
-            android:label="@string/title_activity_order_in"
+            android:label="Daftar Pesanan Masuk"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.register.RegisterActivity" />
         <activity android:name=".ui.login.LoginActivity">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".ui.product.ProductActivity"
