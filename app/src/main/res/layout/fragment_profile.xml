@@ -130,6 +130,12 @@
                     android:text="Edit Profil">
                 </com.google.android.material.button.MaterialButton>
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_update_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Update Password">
+                </com.google.android.material.button.MaterialButton>
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_logout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

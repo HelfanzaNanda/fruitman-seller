@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.maps.MapsActivity"/>
+        <activity android:name=".ui.update_password.UpdatePasswordActivity"></activity>
+        <activity android:name=".ui.maps.MapsActivity" />
         <activity android:name=".ui.forgot_password.ForgotPasswordActivity" />
         <activity android:name=".ui.splash.SplashScreen">
             <intent-filter>
