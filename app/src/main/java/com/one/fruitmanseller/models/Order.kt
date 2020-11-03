@@ -12,5 +12,6 @@ data class Order(
     @SerializedName("offer_price") var offer_price : Int? = 0,
     @SerializedName("status") var status : String? = null,
     @SerializedName("arrive") var arrive : Boolean? = false,
-    @SerializedName("complete") var complete : Boolean? = false
+    @SerializedName("complete") var complete : Boolean? = false,
+    @SerializedName("updated_at") var updated_at : String? = null
 ) : Parcelable

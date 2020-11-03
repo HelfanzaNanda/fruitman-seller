@@ -1,9 +1,21 @@
 package com.one.fruitmanseller.ui.product
 
+import android.content.ContentUris
+import android.content.Context
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.work.Worker
+import androidx.work.WorkerParameters
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.one.fruitmanseller.models.Fruit
 import com.one.fruitmanseller.models.Product
+import com.one.fruitmanseller.models.ProductImage
 import com.one.fruitmanseller.models.SubDistrict
 import com.one.fruitmanseller.repositories.FruitRepository
 import com.one.fruitmanseller.repositories.ProductRepository
@@ -11,10 +23,12 @@ import com.one.fruitmanseller.repositories.SubDistrictRepository
 import com.one.fruitmanseller.utils.ArrayResponse
 import com.one.fruitmanseller.utils.SingleLiveEvent
 import com.one.fruitmanseller.utils.SingleResponse
+import com.one.fruitmanseller.webservices.ApiClient
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+
 
 class ProductViewModel(private val productRepository: ProductRepository,
                        private val subDistrictRepository: SubDistrictRepository,
@@ -26,6 +40,11 @@ class ProductViewModel(private val productRepository: ProductRepository,
     private val fruits = MutableLiveData<List<Fruit>>()
     private val latitude = MutableLiveData<String>()
     private val longitude = MutableLiveData<String>()
+    private var images = MutableLiveData<MutableMap<String, String>>()
+
+    init {
+        images.value = mutableMapOf()
+    }
 
     private fun setLoading() { state.value = ProductState.IsLoading(true) }
     private fun hideLoading() { state.value = ProductState.IsLoading(false) }
@@ -35,8 +54,12 @@ class ProductViewModel(private val productRepository: ProductRepository,
     private fun successDelete() { state.value = ProductState.SuccessDelete }
     private fun createPartFromString(s: String) : RequestBody = RequestBody.create(MultipartBody.FORM, s)
 
+    fun addImage(key : String, v : String){
+        images.value!!.put(key, v)
+        println("all ${images.value}")
+    }
 
-    fun createProduct(token: String, productToSend : Product, imageUrl: String){
+    fun createProduct(token: String, productToSend : Product) {
         try{
             setLoading()
             val map = HashMap<String, RequestBody>()
@@ -47,11 +70,17 @@ class ProductViewModel(private val productRepository: ProductRepository,
             map["fruit_id"] = createPartFromString(productToSend.fruit_id!!)
             map["lat"] = createPartFromString(productToSend.lat!!)
             map["lng"] = createPartFromString(productToSend.lng!!)
-            val file = File(imageUrl)
-            val requestBodyForFile = RequestBody.create(MediaType.parse("image/*"), file)
-            val image = MultipartBody.Part.createFormData("image", file.name, requestBodyForFile)
 
-            productRepository.addProduct(token, map, image, object : SingleResponse<Product>{
+            val multipartTypedOutput = arrayOfNulls<MultipartBody.Part>(images.value!!.size)
+            var i = 0
+            images.value!!.forEach{ (_, value) ->
+                val file = File(value)
+                val body: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
+                multipartTypedOutput[i] = MultipartBody.Part.createFormData("images[$i]", file.name, body)
+                i++
+            }
+
+            productRepository.addProduct(token, map, multipartTypedOutput, object : SingleResponse<Product>{
                 override fun onSuccess(data: Product?) {
                     hideLoading()
                     successCreate()
@@ -59,6 +88,7 @@ class ProductViewModel(private val productRepository: ProductRepository,
 
                 override fun onFailure(err: Error) {
                     hideLoading()
+                    println(err.message.toString())
                     toast(err.message.toString())
                 }
 
@@ -155,14 +185,12 @@ class ProductViewModel(private val productRepository: ProductRepository,
         })
     }
 
-
-
-    fun validate(name : String, price: String, address: String, desc: String, image: String?) : Boolean{
+    fun validate(price: String, address: String, desc: String, image: String?) : Boolean{
         state.value = ProductState.Reset
-        if (name.isEmpty()){
+/*        if (name.isEmpty()){
             state.value = ProductState.Validate(name = "nama produk tidak boleh kosong")
             return false
-        }
+        }*/
         if (price.isEmpty()){
             state.value = ProductState.Validate(price = "harga produk tidak boleh kosong")
             return false
@@ -199,6 +227,7 @@ class ProductViewModel(private val productRepository: ProductRepository,
     fun listenToFruits() = fruits
     fun getIdFruit() = idFruit
     fun getIdSubDistrict() = idSubDistrict
+    fun listenToPathImages() = images
 }
 sealed class ProductState {
     data class IsLoading(var state : Boolean = false) : ProductState()
@@ -215,3 +244,22 @@ sealed class ProductState {
         var image: String? = null
     ) : ProductState()
 }
+
+//class UploadWorker(var token: String, var product : Product, var images : Array<String>, workerParams : WorkerParameters) : Worker(context, workerParams) {
+//    override fun doWork(): Result {
+//        val api = ApiClient.instance()
+//        val productViewModel = ProductViewModel
+//        val multipartTypedOutput = arrayOfNulls<MultipartBody.Part>(images.size)
+//
+//        for((i, j) in images.withIndex()) {
+//            val data = inputData.getString(j)!!
+//            val file = File(data)
+//            val body: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
+//            multipartTypedOutput[i] = MultipartBody.Part.createFormData("images[$i]", file.name, body)
+//        }
+//
+//        println(multipartTypedOutput)
+//        productViewModel.createProduct(token, product)
+//        return Result.success()
+//    }
+//}

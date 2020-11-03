@@ -20,7 +20,7 @@ interface ProductContract {
     fun addProduct(
         token: String,
         requestBody: HashMap<String, RequestBody>,
-        image: MultipartBody.Part,
+        images: Array<MultipartBody.Part?>,
         listener: SingleResponse<Product>
     )
 
@@ -46,13 +46,14 @@ class ProductRepository(private val api: ApiService) : ProductContract {
     override fun addProduct(
         token: String,
         requestBody: HashMap<String, RequestBody>,
-        image: MultipartBody.Part,
+        images: Array<MultipartBody.Part?>,
         listener: SingleResponse<Product>
     ) {
-        api.createProduct(token, requestBody, image)
+        api.createProduct(token, requestBody, images)
             .enqueue(object : Callback<WrappedResponse<Product>> {
                 override fun onFailure(call: Call<WrappedResponse<Product>>, t: Throwable) {
                     listener.onFailure(Error(t.message))
+                    println(Error(t.message))
                 }
 
                 override fun onResponse(
@@ -64,11 +65,16 @@ class ProductRepository(private val api: ApiService) : ProductContract {
                             val body = response.body()
                             if (body?.status!!) {
                                 listener.onSuccess(body.data)
+                                println(body.data)
                             } else {
                                 listener.onFailure(Error(body.message))
+                                println(Error(body.message))
                             }
                         }
-                        !response.isSuccessful -> listener.onFailure(Error(response.message()))
+                        !response.isSuccessful -> {
+                            listener.onFailure(Error(response.message()))
+                            println(Error(response.message()))
+                        }
                     }
                 }
             })

@@ -9,17 +9,37 @@
     <RelativeLayout
         android:background="?attr/selectableItemBackground"
         android:padding="16dp"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
+            android:textStyle="bold"
+            android:text="duku"
+            android:layout_marginBottom="4dp"
+            android:id="@+id/tv_name_prodcut"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_below="@id/tv_name_prodcut"
             android:id="@+id/tv_desc"
             android:textSize="16sp"
             android:layout_marginStart="16dp"
             android:maxLines="5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_below="@id/tv_desc"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/tv_date"
+            android:textSize="16sp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
     </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

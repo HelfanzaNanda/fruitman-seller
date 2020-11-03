@@ -39,9 +39,9 @@ class UpdateProfilActivity : AppCompatActivity() {
             val token = Constants.getToken(this@UpdateProfilActivity)
             val name = et_name.text.toString().trim()
             val address = et_address.text.toString().trim()
-            val password = et_password.text.toString().trim()
+            //val password = et_password.text.toString().trim()
             val phone = et_phone.text.toString().trim()
-            val seller = Seller(name = name, address = address, password = password, phone = phone)
+            val seller = Seller(name = name, address = address, phone = phone)
             updateProfilViewModel.updateProfile(token, seller, imgUrl)
         }
     }

@@ -2,12 +2,14 @@ package com.one.fruitmanseller.ui.login
 
 import androidx.lifecycle.ViewModel
 import com.one.fruitmanseller.models.Seller
+import com.one.fruitmanseller.repositories.FirebaseRepository
 import com.one.fruitmanseller.repositories.SellerRepository
 import com.one.fruitmanseller.utils.Constants
 import com.one.fruitmanseller.utils.SingleLiveEvent
 import com.one.fruitmanseller.utils.SingleResponse
 
-class LoginViewModel (private val sellerRepository: SellerRepository) : ViewModel(){
+class LoginViewModel (private val sellerRepository: SellerRepository,
+                      private val firebaseRepository: FirebaseRepository) : ViewModel(){
     private val state : SingleLiveEvent<LoginState> = SingleLiveEvent()
     private fun setLoading() { state.value = LoginState.Loading(true) }
     private fun hideLoading() { state.value = LoginState.Loading(false) }
@@ -37,17 +39,30 @@ class LoginViewModel (private val sellerRepository: SellerRepository) : ViewMode
 
     fun login(email: String, password: String){
         setLoading()
-        sellerRepository.login(email, password, object : SingleResponse<Seller>{
-            override fun onSuccess(data: Seller?) {
-                hideLoading()
-                success(data!!.token!!)
+        generateTokenFirebase(email, password)
+    }
+
+    private fun generateTokenFirebase(email : String, password: String){
+        firebaseRepository.generateToken(object : SingleResponse<String>{
+            override fun onSuccess(data: String?) {
+                data?.let {fcmToken ->
+                    sellerRepository.login(email, password, fcmToken, object : SingleResponse<Seller>{
+                        override fun onSuccess(data: Seller?) {
+                            hideLoading()
+                            success(data!!.token!!)
+                        }
+
+                        override fun onFailure(err: Error) {
+                            hideLoading()
+                            toast(err.message.toString())
+                        }
+                    })
+                }
             }
 
             override fun onFailure(err: Error) {
-                hideLoading()
                 toast(err.message.toString())
             }
-
         })
     }
 

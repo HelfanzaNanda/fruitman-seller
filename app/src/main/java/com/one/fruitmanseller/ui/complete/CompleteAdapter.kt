@@ -2,6 +2,7 @@ package com.one.fruitmanseller.ui.complete
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,7 @@ class CompleteAdapter (private var orders : MutableList<Order>, private var cont
     : RecyclerView.Adapter<CompleteAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_in_progress, parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_complete, parent, false))
     }
 
     override fun getItemCount(): Int = orders.size
@@ -26,6 +27,8 @@ class CompleteAdapter (private var orders : MutableList<Order>, private var cont
         fun bind(order: Order, context: Context){
             with(itemView){
                 tv_desc.text = "transaksi dengan ${order.buyer.name} dengan ${order.product.name} sudah selesai"
+                tv_name_prodcut.text = order.product.name
+                tv_date.text = order.updated_at
             }
         }
     }

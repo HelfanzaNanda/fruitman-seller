@@ -14,34 +14,63 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_product"
-            android:src="@drawable/ic_tree"
-            android:scaleType="centerCrop"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
-            android:contentDescription="foto produk" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_slider"
+            app:cardCornerRadius="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.smarteist.autoimageslider.SliderView
+                android:id="@+id/image_slider"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                app:sliderAnimationDuration="600"
+                app:sliderAutoCycleDirection="back_and_forth"
+                app:sliderAutoCycleEnabled="true"
+                app:sliderIndicatorAnimationDuration="600"
+                app:sliderIndicatorGravity="center_horizontal|bottom"
+                app:sliderIndicatorMargin="15dp"
+                app:sliderIndicatorOrientation="horizontal"
+                app:sliderIndicatorPadding="3dp"
+                app:sliderIndicatorRadius="2dp"
+                app:sliderIndicatorSelectedColor="#5A5A5A"
+                app:sliderIndicatorUnselectedColor="#FFF"
+                app:sliderScrollTimeInSec="1"
+                app:sliderStartAutoCycle="true" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:visibility="gone"
+            android:id="@+id/card_slider2"
+            app:cardCornerRadius="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.smarteist.autoimageslider.SliderView
+                android:id="@+id/image_slider2"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                app:sliderAnimationDuration="600"
+                app:sliderAutoCycleDirection="back_and_forth"
+                app:sliderAutoCycleEnabled="true"
+                app:sliderIndicatorAnimationDuration="600"
+                app:sliderIndicatorGravity="center_horizontal|bottom"
+                app:sliderIndicatorMargin="15dp"
+                app:sliderIndicatorOrientation="horizontal"
+                app:sliderIndicatorPadding="3dp"
+                app:sliderIndicatorRadius="2dp"
+                app:sliderIndicatorSelectedColor="#5A5A5A"
+                app:sliderIndicatorUnselectedColor="#FFF"
+                app:sliderScrollTimeInSec="1"
+                app:sliderStartAutoCycle="true" />
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
             android:id="@+id/btn_add_image"
             android:textAllCaps="false"
-            android:text="add foto produk"
+            android:text="tambah foto produk"
             android:layout_height="wrap_content"/>
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_marginTop="16dp"
-            app:errorEnabled="true"
-            app:boxBackgroundColor="@android:color/transparent"
-            android:id="@+id/til_name"
-            android:hint="Masukan nama produk"
-            android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:maxLines="1"
-                android:id="@+id/et_name"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -88,41 +117,39 @@
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
+        <com.google.android.material.button.MaterialButton
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:id="@+id/btn_to_maps"
+            android:text="masukkan titik alamat "
+            android:textAllCaps="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <Spinner
                 android:popupBackground="@color/colorWhite"
                 android:layout_marginBottom="10dp"
                 android:id="@+id/spinner_sub_district"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <Spinner
                 android:popupBackground="@color/colorWhite"
                 android:id="@+id/spinner_fruit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-
-
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_to_maps"
-            android:text="masukkan alamat anda"
-            android:textAllCaps="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
         <com.google.android.material.button.MaterialButton
             android:enabled="false"

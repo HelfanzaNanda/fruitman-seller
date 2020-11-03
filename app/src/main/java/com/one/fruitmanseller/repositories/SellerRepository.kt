@@ -17,11 +17,12 @@ import java.io.File
 
 interface SellerContract{
     fun register(registerSeller: RegisterSeller, listener : SingleResponse<RegisterSeller>)
-    fun login(email : String, password : String, listener: SingleResponse<Seller>)
+    fun login(email : String, password : String, fcmToken : String, listener: SingleResponse<Seller>)
     fun profile(token : String, listener: SingleResponse<Seller>)
     fun updateProfile(token : String, seller: Seller, listener: SingleResponse<Seller>)
     fun updatePhotoProfile(token: String, pathImage : String, listener: SingleResponse<Seller>)
     fun forgotPassword(email: String, listener: SingleResponse<Seller>)
+    fun updatePassword(token : String, password: String, listener: SingleResponse<Seller>)
 }
 
 class SellerRepository (private val api : ApiService) : SellerContract{
@@ -50,10 +51,9 @@ class SellerRepository (private val api : ApiService) : SellerContract{
         })
     }
 
-    override fun login(email: String, password: String, listener: SingleResponse<Seller>) {
-        println(email)
-        println(password)
-        api.login(email, password).enqueue(object : Callback<WrappedResponse<Seller>>{
+    override fun login(email: String, password: String, fcmToken : String,listener: SingleResponse<Seller>) {
+
+        api.login(email, password, fcmToken).enqueue(object : Callback<WrappedResponse<Seller>>{
             override fun onFailure(call: Call<WrappedResponse<Seller>>, t: Throwable) {
                 listener.onFailure(Error(t.message))
             }
@@ -161,6 +161,25 @@ class SellerRepository (private val api : ApiService) : SellerContract{
                     !response.isSuccessful -> {
                         listener.onFailure(Error(response.message()))
                     }
+                }
+            }
+
+        })
+    }
+
+    override fun updatePassword(token: String, password: String, listener: SingleResponse<Seller>) {
+        api.updatePassword(token, password).enqueue(object : Callback<WrappedResponse<Seller>>{
+            override fun onFailure(call: Call<WrappedResponse<Seller>>, t: Throwable) {
+                listener.onFailure(Error(t.message))
+            }
+
+            override fun onResponse(call: Call<WrappedResponse<Seller>>, response: Response<WrappedResponse<Seller>>) {
+                when{
+                    response.isSuccessful -> {
+                        val b = response.body()
+                        if (b?.status!!) listener.onSuccess(b.data) else listener.onFailure(Error(b.message))
+                    }
+                    else -> listener.onFailure(Error(response.message()))
                 }
             }
 

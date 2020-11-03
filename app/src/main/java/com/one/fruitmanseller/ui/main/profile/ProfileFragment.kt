@@ -10,6 +10,7 @@ import coil.api.load
 import com.one.fruitmanseller.R
 import com.one.fruitmanseller.models.Seller
 import com.one.fruitmanseller.ui.login.LoginActivity
+import com.one.fruitmanseller.ui.update_password.UpdatePasswordActivity
 import com.one.fruitmanseller.ui.update_profile.UpdateProfilActivity
 import com.one.fruitmanseller.utils.Constants
 import com.one.fruitmanseller.utils.extensions.gone
@@ -53,6 +54,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile){
         btn_update_profile.setOnClickListener {
             startActivity(Intent(requireActivity(), UpdateProfilActivity::class.java).apply {
                 putExtra("SELLER", seller)
+            })
+        }
+
+        btn_update_password.setOnClickListener {
+            startActivity(Intent(requireActivity(), UpdatePasswordActivity::class.java).apply {
             })
         }
     }

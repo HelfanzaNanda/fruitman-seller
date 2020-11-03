@@ -12,6 +12,7 @@ import com.one.fruitmanseller.ui.main.timeline.TimelineViewModel
 import com.one.fruitmanseller.ui.order_in.OrderInViewModel
 import com.one.fruitmanseller.ui.product.ProductViewModel
 import com.one.fruitmanseller.ui.register.RegisterViewModel
+import com.one.fruitmanseller.ui.update_password.UpdatePasswordViewModel
 import com.one.fruitmanseller.ui.update_profile.UpdateProfilViewModel
 import com.one.fruitmanseller.webservices.ApiClient
 import org.koin.android.ext.koin.androidContext
@@ -47,7 +48,7 @@ val repositoryModules = module {
 
 val viewModelModules = module {
     viewModel { RegisterViewModel(get(),get()) }
-    viewModel { LoginViewModel(get()) }
+    viewModel { LoginViewModel(get(), get()) }
     viewModel { ProfileViewModel(get()) }
     viewModel { UpdateProfilViewModel(get()) }
 
@@ -58,4 +59,6 @@ val viewModelModules = module {
     viewModel { CompleteViewModel(get()) }
     viewModel { InProgressViewModel(get()) }
     viewModel { OrderInViewModel(get()) }
+
+    viewModel { UpdatePasswordViewModel(get()) }
 }

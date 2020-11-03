@@ -12,7 +12,8 @@ interface ApiService {
     @POST("api/seller/login")
     fun login(
         @Field("email") email : String,
-        @Field("password") password : String
+        @Field("password") password : String,
+        @Field("fcm_token") fcmToken : String
     ) : Call<WrappedResponse<Seller>>
 
     @Headers("Content-Type: application/json")
@@ -38,6 +39,13 @@ interface ApiService {
     fun updatePhotoProfile(
         @Header("Authorization") token : String,
         @Part image : MultipartBody.Part
+    ) :Call<WrappedResponse<Seller>>
+
+    @FormUrlEncoded
+    @POST("api/seller/profile/update/password")
+    fun updatePassword(
+        @Header("Authorization") token : String,
+        @Field("password") pass : String
     ) :Call<WrappedResponse<Seller>>
 
     @FormUrlEncoded
@@ -70,7 +78,10 @@ interface ApiService {
 
     @Multipart
     @POST("api/seller/product/store")
-    fun createProduct(@Header("Authorization") token : String, @PartMap partMap:  HashMap<String, RequestBody>, @Part image : MultipartBody.Part) : Call<WrappedResponse<Product>>
+    fun createProduct(
+        @Header("Authorization") token : String,
+        @PartMap json : HashMap<String, RequestBody>,
+        @Part images : Array<MultipartBody.Part?>) : Call<WrappedResponse<Product>>
 
     @Headers("Content-Type: application/json")
     @POST("api/seller/product/{id}/update")

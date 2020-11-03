@@ -28,7 +28,7 @@ class TimelineAdapter (private var products : MutableList<Product>, private var 
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         fun bind(product: Product, context: Context){
             with(itemView){
-                img_product.load(product.image)
+                img_product.load(product.images[0].image)
                 txt_name.text = product.name
                 txt_address.text = product.address
                 txt_price.text = Constants.setToIDR(product.price!!)

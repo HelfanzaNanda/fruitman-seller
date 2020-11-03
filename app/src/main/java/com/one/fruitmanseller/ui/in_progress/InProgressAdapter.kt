@@ -41,7 +41,7 @@ class InProgressAdapter (private var orders : MutableList<Order>,
                         context.AlertComplete(mesage, token, order.id.toString(), inProgressViewModel)
                     }
                     btn_decline.setOnClickListener {
-                        val message ="apakah pengepul tidak jadi membeli produk?"
+                        val message ="apakah penebas tidak jadi membeli produk?"
                         val token = Constants.getToken(context)
                         context.AlertCancel(message, token, order.id.toString(), inProgressViewModel)
                     }
