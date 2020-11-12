@@ -3,12 +3,9 @@ package com.one.fruitmanseller.ui.main.timeline
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.fxn.pix.Pix
 import com.one.fruitmanseller.R
 import com.one.fruitmanseller.models.Product
 import com.one.fruitmanseller.models.Seller
@@ -17,9 +14,7 @@ import com.one.fruitmanseller.utils.Constants
 import com.one.fruitmanseller.utils.extensions.gone
 import com.one.fruitmanseller.utils.extensions.showToast
 import com.one.fruitmanseller.utils.extensions.visible
-import kotlinx.android.synthetic.main.fragment_timeline.*
 import kotlinx.android.synthetic.main.fragment_timeline.view.*
-import kotlinx.android.synthetic.main.fragment_timeline.view.textUsername
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TimelineFragment : Fragment(R.layout.fragment_timeline){
@@ -28,15 +23,18 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUpUi()
-        requireView().fab_add_product.setOnClickListener {
-            startActivity(Intent(requireActivity(), ProductActivity::class.java))
-        }
-        observer()
+        setURecyclerView()
+        goToAddProductActivity()
         observe()
     }
 
-    private fun setUpUi() {
+    private fun goToAddProductActivity(){
+        requireView().fab_add_product.setOnClickListener {
+            startActivity(Intent(requireActivity(), ProductActivity::class.java))
+        }
+    }
+
+    private fun setURecyclerView() {
         requireView().rv_timeline.apply {
             adapter = TimelineAdapter(mutableListOf(), requireActivity())
             layoutManager = GridLayoutManager(requireActivity(), 2)
@@ -44,22 +42,37 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline){
     }
 
     private fun observe() {
-        timelineViewModel.listenToProducts().observe(viewLifecycleOwner, Observer { handleProducts(it) })
-        timelineViewModel.listenToCurrentUser().observe(viewLifecycleOwner, Observer { handleCurrentUser(it) })
+        observeState()
+        observeProducts()
+        observeCurrentUser()
     }
+
+    private fun observeState() = timelineViewModel.listenToState().observer(viewLifecycleOwner, Observer { handleUiState(it) })
+    private fun observeProducts() = timelineViewModel.listenToProducts().observe(viewLifecycleOwner, Observer { handleProducts(it) })
+
+    private fun handleProducts(list: List<Product>?) {
+        list?.let {
+            requireView().rv_timeline.adapter?.let { adapter ->
+                if (adapter is TimelineAdapter){
+                    adapter.changelist(it)
+                }
+            }
+        }
+    }
+
+    private fun observeCurrentUser() = timelineViewModel.listenToCurrentUser().observe(viewLifecycleOwner, Observer { handleCurrentUser(it) })
 
     private fun handleCurrentUser(it: Seller?) {
-        it?.let { user-> textUsername.text = user.name }
+        it?.let { user-> requireView().textUsername.text = user.name }
     }
 
-    private fun observer() {
-        timelineViewModel.listenToState().observer(viewLifecycleOwner, Observer { handleUiState(it) })
-    }
 
-    private fun handleUiState(it: TimelineState) {
-        when(it){
-            is TimelineState.Loading -> handleLoading(it.state)
-            is TimelineState.Showtoast -> requireActivity().showToast(it.message)
+    private fun handleUiState(state: TimelineState?) {
+        state?.let {
+            when(it){
+                is TimelineState.Loading -> handleLoading(it.state)
+                is TimelineState.Showtoast -> requireActivity().showToast(it.message)
+            }
         }
     }
 
@@ -67,17 +80,12 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline){
         if (state)requireView().loading.visible() else requireView().loading.gone()
     }
 
-    private fun handleProducts(it: List<Product>) {
-        requireView().rv_timeline.adapter?.let { adapter ->
-            if (adapter is TimelineAdapter){
-                adapter.changelist(it)
-            }
-        }
-    }
+    private fun fetchProducts() = timelineViewModel.fetchPrducts(Constants.getToken(requireActivity()))
+    private fun getCurrentUser() = timelineViewModel.getCurrentUser(Constants.getToken(requireActivity()))
 
     override fun onResume() {
         super.onResume()
-        timelineViewModel.fetchPrducts(Constants.getToken(requireActivity()))
-        timelineViewModel.getCurrentUser(Constants.getToken(requireActivity()))
+        fetchProducts()
+        getCurrentUser()
     }
 }

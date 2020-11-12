@@ -29,4 +29,9 @@
     <string name="title_activity_update_profil">UpdateProfilActivity</string>
 
     <string name="mapbox_access_token">pk.eyJ1IjoiaWtod2FuZG4iLCJhIjoiY2tmbm8zNHE5MHZuMjJ1cDJ3N3gwZ2x3ZCJ9.9ofDwsWSacyRDznAlFkqew</string>
+    <string name="message_logout">apakah anda yakin?</string>
+    <string name="ya">ya</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="update_password">Update Password</string>
+    <string name="logout">Logout</string>
 </resources>

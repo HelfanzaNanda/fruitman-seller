@@ -11,20 +11,19 @@ class ProfileViewModel (private val sellerRepository: SellerRepository) : ViewMo
     private val state : SingleLiveEvent<ProfileState> = SingleLiveEvent()
     private val user  = MutableLiveData<Seller>()
 
-    private fun setLoading() { state.value = ProfileState.Loading(true) }
-    private fun hideLoading() { state.value = ProfileState.Loading(false) }
+    private fun isLoading(b : Boolean) { state.value = ProfileState.Loading(b) }
     private fun toast(message: String){ state.value = ProfileState.ShowToast(message) }
 
     fun profile(token : String){
-        setLoading()
+        isLoading(true)
         sellerRepository.profile(token, object : SingleResponse<Seller>{
             override fun onSuccess(data: Seller?) {
-                hideLoading()
+                isLoading(false)
                 data?.let { user.postValue(it) }
             }
 
             override fun onFailure(err: Error) {
-                hideLoading()
+                isLoading(false)
                 toast(err.message.toString())
             }
         })
