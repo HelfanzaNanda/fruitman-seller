@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">FruitmanSeller</string>
+    <string name="app_name">Penjual</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="title_sale">Proses Penjulan</string>
+    <string name="title_sale">Proses Penjualan</string>
     <string name="seller_order_in">Orderan masuk</string>
     <string name="buyer_in_progress">Dalam Proses</string>
     <string name="buyer_completed">Transaksi Sudah Selesai</string>
@@ -34,4 +34,5 @@
     <string name="update_profile">Update Profile</string>
     <string name="update_password">Update Password</string>
     <string name="logout">Logout</string>
+    <string name="premium">Premium</string>
 </resources>

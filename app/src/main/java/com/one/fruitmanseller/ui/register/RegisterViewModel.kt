@@ -25,10 +25,10 @@ class RegisterViewModel(private val sellerRepository: SellerRepository,
             return false
         }
 
-        if (!Constants.isAlpha(name)){
-            state.value = RegisterState.Validate(name = "nama hanya mengandung huruf saja")
-            return false
-        }
+//        if (!Constants.isAlpha(name)){
+//            state.value = RegisterState.Validate(name = "nama hanya mengandung huruf saja")
+//            return false
+//        }
 
         if (name.length < 5){
             state.value = RegisterState.Validate(name= "nama setidaknya 5 karakter")

@@ -3,12 +3,14 @@ package com.one.fruitmanseller.ui.main.timeline
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.one.fruitmanseller.R
 import com.one.fruitmanseller.models.Product
 import com.one.fruitmanseller.models.Seller
+import com.one.fruitmanseller.ui.premium.PremiumActivity
 import com.one.fruitmanseller.ui.product.ProductActivity
 import com.one.fruitmanseller.utils.Constants
 import com.one.fruitmanseller.utils.extensions.gone
@@ -30,9 +32,31 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline){
 
     private fun goToAddProductActivity(){
         requireView().fab_add_product.setOnClickListener {
-            startActivity(Intent(requireActivity(), ProductActivity::class.java))
+            if (!isPremium()){
+                if(isOverload()){
+                    alertOverload()
+                }else{
+                    startActivity(Intent(requireActivity(), ProductActivity::class.java))
+                }
+            }else{
+                startActivity(Intent(requireActivity(), ProductActivity::class.java))
+            }
         }
     }
+
+    private fun alertOverload(){
+        AlertDialog.Builder(requireActivity()).apply {
+            setMessage("maaf untuk free hanya bisa menambahkan 2 produk saja, jika ingin lebih silahkan upgrade premium")
+            setPositiveButton("premium"){dialog, which ->
+                dialog.dismiss()
+                startActivity(Intent(requireActivity(), PremiumActivity::class.java))
+            }
+            setNegativeButton("tidak"){dialog, which ->
+                dialog.dismiss()
+            }
+        }.show()
+    }
+
 
     private fun setURecyclerView() {
         requireView().rv_timeline.apply {
@@ -52,6 +76,8 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline){
 
     private fun handleProducts(list: List<Product>?) {
         list?.let {
+            if (it.size == 2) Constants.setOverload(requireActivity(), true)
+            println("total ${it.size}")
             requireView().rv_timeline.adapter?.let { adapter ->
                 if (adapter is TimelineAdapter){
                     adapter.changelist(it)
@@ -63,7 +89,9 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline){
     private fun observeCurrentUser() = timelineViewModel.listenToCurrentUser().observe(viewLifecycleOwner, Observer { handleCurrentUser(it) })
 
     private fun handleCurrentUser(it: Seller?) {
-        it?.let { user-> requireView().textUsername.text = user.name }
+        it?.let { user->
+            requireView().textUsername.text = user.name
+        }
     }
 
 
@@ -82,6 +110,8 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline){
 
     private fun fetchProducts() = timelineViewModel.fetchPrducts(Constants.getToken(requireActivity()))
     private fun getCurrentUser() = timelineViewModel.getCurrentUser(Constants.getToken(requireActivity()))
+    private fun isOverload() = Constants.getOverload(requireActivity())
+    private fun isPremium() = Constants.getPremium(requireActivity())
 
     override fun onResume() {
         super.onResume()

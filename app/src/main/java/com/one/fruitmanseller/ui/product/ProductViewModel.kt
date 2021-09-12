@@ -37,6 +37,7 @@ class ProductViewModel(private val productRepository: ProductRepository,
     private val subDistricts = MutableLiveData<List<SubDistrict>>()
     private val idSubDistrict = MutableLiveData<String>()
     private val idFruit = MutableLiveData<String>()
+    private val product = MutableLiveData<Product>()
     private val fruits = MutableLiveData<List<Fruit>>()
     private val latitude = MutableLiveData<String>()
     private val longitude = MutableLiveData<String>()
@@ -51,6 +52,7 @@ class ProductViewModel(private val productRepository: ProductRepository,
     private fun toast(message: String) {state.value = ProductState.ShowToast(message)}
     private fun successCreate() { state.value = ProductState.SuccessCreate}
     private fun successUpdate() { state.value = ProductState.SuccessUpdate }
+    private fun successUpdatePhoto() { state.value = ProductState.SuccessUpdatePhoto }
     private fun successDelete() { state.value = ProductState.SuccessDelete }
     private fun createPartFromString(s: String) : RequestBody = RequestBody.create(MultipartBody.FORM, s)
 
@@ -100,17 +102,19 @@ class ProductViewModel(private val productRepository: ProductRepository,
 
     }
 
-    fun updateProduct(token: String, id : String, productToSend : Product, imageUrl : String){
+    fun updateProduct(token: String, id : String, productToSend : Product){
         setLoading()
         productRepository.updateProduct(token, id, productToSend, object : SingleResponse<Product>{
             override fun onSuccess(data: Product?) {
                 hideLoading()
                 data?.let {
-                    if (imageUrl.isNotEmpty()){
-                        updatePhotoProduct(token, id, imageUrl)
-                    }else{
-                        successUpdate()
-                    }
+                    successUpdate()
+//
+//                    if (imageUrl.isNotEmpty()){
+//                        updatePhotoProduct(token, id, imageUrl)
+//                    }else{
+//                        successUpdate()
+//                    }
                 }
             }
 
@@ -121,14 +125,20 @@ class ProductViewModel(private val productRepository: ProductRepository,
         })
     }
 
-    fun updatePhotoProduct(token: String, id : String, urlPhoto : String){
+    fun updatePhotoProduct(token: String, id : String, urlImages : ArrayList<String>){
         setLoading()
-        productRepository.updatePhotoProduct(token, id, urlPhoto, object : SingleResponse<Product>{
+        val multipartTypedOutput = arrayOfNulls<MultipartBody.Part>(urlImages.size)
+        var i = 0
+        urlImages.forEach { url ->
+            val file = File(url)
+            val body: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
+            multipartTypedOutput[i] = MultipartBody.Part.createFormData("images[$i]", file.name, body)
+            i++
+        }
+        productRepository.updatePhotoProduct(token, id, multipartTypedOutput, object : SingleResponse<Product>{
             override fun onSuccess(data: Product?) {
                 hideLoading()
-                data?.let {
-                    successUpdate()
-                }
+                data?.let {  successUpdatePhoto() }
             }
 
             override fun onFailure(err: Error) {
@@ -185,6 +195,22 @@ class ProductViewModel(private val productRepository: ProductRepository,
         })
     }
 
+    fun findProduct(token: String, id: String){
+        setLoading()
+        productRepository.findProduct(token, id, object : SingleResponse<Product>{
+            override fun onSuccess(data: Product?) {
+                hideLoading()
+                data?.let { product.postValue(it) }
+            }
+
+            override fun onFailure(err: Error) {
+                hideLoading()
+                toast(err.message.toString())
+            }
+
+        })
+    }
+
     fun validate(price: String, address: String, desc: String, image: String?) : Boolean{
         state.value = ProductState.Reset
 /*        if (name.isEmpty()){
@@ -225,6 +251,7 @@ class ProductViewModel(private val productRepository: ProductRepository,
     fun getLng() = longitude
     fun listenToSubDistricts() = subDistricts
     fun listenToFruits() = fruits
+    fun listenToProduct() = product
     fun getIdFruit() = idFruit
     fun getIdSubDistrict() = idSubDistrict
     fun listenToPathImages() = images
@@ -234,6 +261,7 @@ sealed class ProductState {
     data class ShowToast(var message : String) : ProductState()
     object SuccessCreate : ProductState()
     object SuccessUpdate : ProductState()
+    object SuccessUpdatePhoto : ProductState()
     object SuccessDelete : ProductState()
     object Reset : ProductState()
     data class Validate(

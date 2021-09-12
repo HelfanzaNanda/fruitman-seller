@@ -13,7 +13,9 @@ data class Seller(
     @SerializedName("api_token")var token : String? = null,
     @SerializedName("address")var address : String? = null,
     @SerializedName("image")var image : String? = null,
-    @SerializedName("password")var password : String? = null
+    @SerializedName("password") var password : String? = null,
+    @SerializedName("premium") var premium : Boolean = false,
+    @SerializedName("overload") var overload : Boolean = false
 ) : Parcelable
 
 @Parcelize

@@ -12,18 +12,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
-import androidx.viewpager.widget.PagerAdapter
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
-import coil.api.load
 import com.fxn.pix.Options
 import com.fxn.pix.Pix
-import com.google.gson.GsonBuilder
 import com.one.fruitmanseller.R
 import com.one.fruitmanseller.models.Fruit
 import com.one.fruitmanseller.models.Product
-import com.one.fruitmanseller.models.ProductImage
 import com.one.fruitmanseller.models.SubDistrict
 import com.one.fruitmanseller.ui.maps.Coordinate
 import com.one.fruitmanseller.ui.maps.MapsActivity
@@ -37,12 +30,13 @@ import com.smarteist.autoimageslider.SliderView
 import kotlinx.android.synthetic.main.activity_product.*
 import kotlinx.android.synthetic.main.content_product.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
+import java.util.ArrayList
 
 class ProductActivity : AppCompatActivity() {
 
     companion object{
         private const val IMAGE_REQ_CODE = 101
+        private const val IMAGE_REG_UPDATE = 102
         private const val RESULT_MAPS = 69
     }
     private val productViewModel: ProductViewModel by viewModel()
@@ -55,9 +49,9 @@ class ProductActivity : AppCompatActivity() {
         setUpToolbar()
         setUpImageSlider1()
         setUpImageSlider2()
+        if(!isInsert()) fetchProduct()
         observer()
         fill()
-        pickImage()
         goToMapsActivity()
         fetchFruits()
         fetchSubdistricts()
@@ -87,10 +81,10 @@ class ProductActivity : AppCompatActivity() {
         }.startAutoCycle()
     }
 
-    private fun pickImage(){
+    private fun pickImage(ImageCode : Int){
         btn_add_image.setOnClickListener {
             val opt = Options.init()
-                .setRequestCode(IMAGE_REQ_CODE)
+                .setRequestCode(ImageCode)
                 .setCount(5)
                 .setExcludeVideos(true)
             Pix.start(this@ProductActivity, opt)
@@ -101,11 +95,28 @@ class ProductActivity : AppCompatActivity() {
         observeState()
         observeFruits()
         observeSubDistricts()
+        if (!isInsert()) observeProduct()
     }
 
     private fun observeState() = productViewModel.listenToState().observer(this, Observer { handleUiState(it) })
     private fun observeSubDistricts() = productViewModel.listenToSubDistricts().observe(this, Observer { handleSubDistricts(it) })
     private fun observeFruits() = productViewModel.listenToFruits().observe(this, Observer { handleFruits(it) })
+    private fun observeProduct() = productViewModel.listenToProduct().observe(this, Observer { handleProduct(it) })
+
+    private fun handleProduct(product: Product?) {
+        product?.let {
+            et_price.setText((it.price.toString()))
+            et_description.setText(it.description.toString())
+            et_address.setText(it.address.toString())
+
+            image_slider2.sliderAdapter?.let { pagerAdapter ->
+                if (pagerAdapter is ImageSliderAdapter){
+                    pagerAdapter.changelist(it.images)
+                }
+            }
+        }
+    }
+
     private fun getPathImages() = productViewModel.listenToPathImages().value
 
     private fun setIdSubDistrict(subDIstrictId : String) = productViewModel.setIdSubDistrict(subDIstrictId)
@@ -115,6 +126,9 @@ class ProductActivity : AppCompatActivity() {
     private fun fetchFruits() = productViewModel.fetchFruits(Constants.getToken(this@ProductActivity))
     private fun fetchSubdistricts() = productViewModel.fetchSubdistricts(Constants.getToken(this@ProductActivity))
 
+    private fun findIndex(arr: Array<Int>, item: Int): Int? {
+        return (arr.indices).firstOrNull { i: Int -> item == arr[i] };
+    }
     private fun handleSubDistricts(list: List<SubDistrict>?) {
         list?.let { lisSubDistrict ->
             val subDistrictNames = mutableListOf<String>()
@@ -124,6 +138,11 @@ class ProductActivity : AppCompatActivity() {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
             spinner_sub_district.adapter = adapter
+            if (!isInsert()){
+                val f = lisSubDistrict.find { subDistrict -> subDistrict.id == getPassedProduct()?.subdistrict_id?.toInt() }
+                val index = subDistrictNames.indexOf(f?.name)
+                spinner_sub_district.setSelection(index)
+            }
             spinner_sub_district.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
 
@@ -144,6 +163,11 @@ class ProductActivity : AppCompatActivity() {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
         spinner_fruit.adapter = adapter
+        if (!isInsert()){
+            val f = distinctFruit.find { fruit -> fruit.id == getPassedProduct()?.fruit_id?.toInt() }
+            val index = fruitNames.indexOf(f?.name)
+            spinner_fruit.setSelection(index)
+        }
         spinner_fruit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
@@ -156,8 +180,10 @@ class ProductActivity : AppCompatActivity() {
 
     private fun fill(){
         if (isInsert()){
+            pickImage(IMAGE_REQ_CODE)
             card_slider.visible()
             card_slider2.gone()
+            btn_add_image.text = "tambah gambar"
             btn_submit.text = "tambah"
             btn_submit.setOnClickListener {
                 val token = Constants.getToken(this@ProductActivity)
@@ -181,11 +207,13 @@ class ProductActivity : AppCompatActivity() {
                 }
             }
         }else{
+            pickImage(IMAGE_REG_UPDATE)
             card_slider.gone()
             card_slider2.visible()
+            btn_add_image.text = "edit gambar"
             btn_submit.isEnabled = true
             btn_submit.text = "ubah"
-            getProduct()
+            //getProduct()
             btn_submit.setOnClickListener {
                 val token = Constants.getToken(this@ProductActivity)
                 val price = et_price.text.toString().trim()
@@ -197,7 +225,7 @@ class ProductActivity : AppCompatActivity() {
                     val productToSend = Product( price = price.toInt(),
                         address = address, description = desc, lat = lat, lng = lng,
                         subdistrict_id = getIdSubDIstrict(), fruit_id = getIdFruit())
-                    productViewModel.updateProduct(token, getPassedProduct()?.id.toString(), productToSend, imageUrl)
+                    productViewModel.updateProduct(token, getPassedProduct()?.id.toString(), productToSend)
                 }else{
                     showInfoAlert("Not valid")
                 }
@@ -218,9 +246,15 @@ class ProductActivity : AppCompatActivity() {
             is ProductState.SuccessCreate -> handleSuccessCreate()
             is ProductState.SuccessUpdate -> handleSuccessUpdate()
             is ProductState.SuccessDelete -> handleSuccessDelete()
+            is ProductState.SuccessUpdatePhoto -> handleSuccessUpdatePhoto()
             is ProductState.Reset -> handleReset()
             is ProductState.Validate -> handleValidate(it)
         }
+    }
+
+    private fun handleSuccessUpdatePhoto() {
+        showToast("berhasil update photo")
+        fetchProduct()
     }
 
     private fun handleSuccessDelete() {
@@ -256,17 +290,9 @@ class ProductActivity : AppCompatActivity() {
         if (state) loading.visible() else loading.gone()
     }
 
-    private fun getProduct(){
-        getPassedProduct()?.let {
-            et_price.setText((it.price.toString()))
-            et_description.setText(it.description.toString())
-            et_address.setText(it.address.toString())
-            image_slider2.sliderAdapter?.let { pagerAdapter ->
-                if (pagerAdapter is ImageSliderAdapter){
-                    pagerAdapter.changelist(it.images)
-                }
-            }
-        }
+    private fun tokenUser() = Constants.getToken(this@ProductActivity)
+    private fun updateImagesProduct(urlImages: ArrayList<String>) {
+        productViewModel.updatePhotoProduct(tokenUser(), getPassedProduct()?.id.toString(), urlImages)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -288,7 +314,14 @@ class ProductActivity : AppCompatActivity() {
                 btn_submit.isEnabled = true
             }
         }
+
+        if(requestCode == IMAGE_REG_UPDATE && resultCode == Activity.RESULT_OK && data != null){
+            val returnedImages = data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
+            returnedImages?.let { updateImagesProduct(it) }
+        }
+
         if(requestCode == RESULT_MAPS && resultCode == Activity.RESULT_OK && data != null) onLatLngReturned(data)
+
 
     }
 
@@ -326,6 +359,8 @@ class ProductActivity : AppCompatActivity() {
             startActivityForResult(Intent(this@ProductActivity, MapsActivity::class.java), RESULT_MAPS)
         }
     }
+
+    private fun fetchProduct() = productViewModel.findProduct(Constants.getToken(this@ProductActivity), getPassedProduct()?.id.toString())
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){

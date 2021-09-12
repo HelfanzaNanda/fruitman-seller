@@ -1,7 +1,6 @@
 package com.one.fruitmanseller.repositories
 
 import com.google.gson.GsonBuilder
-import com.one.fruitmanseller.models.Product
 import com.one.fruitmanseller.models.RegisterSeller
 import com.one.fruitmanseller.models.Seller
 import com.one.fruitmanseller.utils.SingleResponse
@@ -23,6 +22,7 @@ interface SellerContract{
     fun updatePhotoProfile(token: String, pathImage : String, listener: SingleResponse<Seller>)
     fun forgotPassword(email: String, listener: SingleResponse<Seller>)
     fun updatePassword(token : String, password: String, listener: SingleResponse<Seller>)
+    fun premium(token: String, image : String, listener: SingleResponse<Seller>)
 }
 
 class SellerRepository (private val api : ApiService) : SellerContract{
@@ -178,6 +178,30 @@ class SellerRepository (private val api : ApiService) : SellerContract{
                     response.isSuccessful -> {
                         val b = response.body()
                         if (b?.status!!) listener.onSuccess(b.data) else listener.onFailure(Error(b.message))
+                    }
+                    else -> listener.onFailure(Error(response.message()))
+                }
+            }
+
+        })
+    }
+
+    override fun premium(token: String, image: String, listener: SingleResponse<Seller>) {
+        val file = File(image)
+        val requestBodyForFile = RequestBody.create(MediaType.parse("image/*"), file)
+        val img = MultipartBody.Part.createFormData("image", file.name, requestBodyForFile)
+        api.premium(token, img).enqueue(object : Callback<WrappedResponse<Seller>>{
+            override fun onFailure(call: Call<WrappedResponse<Seller>>, t: Throwable) {
+                listener.onFailure(Error(t.message))
+            }
+
+            override fun onResponse(call: Call<WrappedResponse<Seller>>, response: Response<WrappedResponse<Seller>>) {
+                when{
+                    response.isSuccessful -> {
+                        val body = response.body()
+                        if (body?.status!!) listener.onSuccess(body.data) else listener.onFailure(
+                            Error(body.message)
+                        )
                     }
                     else -> listener.onFailure(Error(response.message()))
                 }

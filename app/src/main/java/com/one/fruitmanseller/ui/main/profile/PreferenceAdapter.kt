@@ -12,6 +12,7 @@ import coil.api.load
 import com.one.fruitmanseller.R
 import com.one.fruitmanseller.models.Preference
 import com.one.fruitmanseller.ui.login.LoginActivity
+import com.one.fruitmanseller.ui.premium.PremiumActivity
 import com.one.fruitmanseller.ui.update_password.UpdatePasswordActivity
 import com.one.fruitmanseller.ui.update_profile.UpdateProfilActivity
 import com.one.fruitmanseller.utils.Constants
@@ -28,6 +29,7 @@ class PreferenceAdapter (private var context: Context, private var prefs : List<
 
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         fun bind(pref : Preference, context: Context, i : Int){
+            val premium = Constants.getPremium(context)
             with(itemView){
                 pref_image.load(pref.image)
                 pref_name.text = context.getString(pref.name)
@@ -36,6 +38,16 @@ class PreferenceAdapter (private var context: Context, private var prefs : List<
                         0 -> context.startActivity(Intent(context, UpdateProfilActivity::class.java))
                         1 -> context.startActivity(Intent(context, UpdatePasswordActivity::class.java))
                         2 -> {
+                            if (premium){
+                                AlertDialog.Builder(context).apply {
+                                    setMessage("anda sudah upgrade premium")
+                                    setPositiveButton("ya") { d, _ -> d.dismiss() }
+                                }.show()
+                            }else{
+                                context.startActivity(Intent(context, PremiumActivity::class.java))
+                            }
+                        }
+                        3 -> {
                             AlertDialog.Builder(context).apply {
                                 setMessage("apakah yakin ingin logout?")
                                 setPositiveButton("ya") { d, _ ->

@@ -9,9 +9,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:hardwareAccelerated="true"
         android:name=".MyApp"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/fruitman"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.update_password.UpdatePasswordActivity"/>
+        <activity android:name=".ui.premium.PremiumActivity"></activity>
+        <activity android:name=".ui.update_password.UpdatePasswordActivity" />
         <activity android:name=".ui.maps.MapsActivity" />
         <activity android:name=".ui.forgot_password.ForgotPasswordActivity" />
         <activity android:name=".ui.splash.SplashScreen">
@@ -62,8 +63,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:label="Fruitman Seller" >
-        </activity>
+            android:label="Fruitman Seller"></activity>
 
         <service android:name=".utils.fcm.MyFirebaseMessagingService">
             <intent-filter>

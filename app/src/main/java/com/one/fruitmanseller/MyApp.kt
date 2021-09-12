@@ -10,6 +10,7 @@ import com.one.fruitmanseller.ui.login.LoginViewModel
 import com.one.fruitmanseller.ui.main.profile.ProfileViewModel
 import com.one.fruitmanseller.ui.main.timeline.TimelineViewModel
 import com.one.fruitmanseller.ui.order_in.OrderInViewModel
+import com.one.fruitmanseller.ui.premium.PremiumViewModel
 import com.one.fruitmanseller.ui.product.ProductViewModel
 import com.one.fruitmanseller.ui.register.RegisterViewModel
 import com.one.fruitmanseller.ui.update_password.UpdatePasswordViewModel
@@ -39,6 +40,7 @@ val retrofitModule = module {
 }
 
 val repositoryModules = module {
+    factory { BankRepository(get()) }
     factory { SellerRepository(get()) }
     factory { ProductRepository(get()) }
     factory { OrderRepository(get()) }
@@ -61,4 +63,5 @@ val viewModelModules = module {
     viewModel { OrderInViewModel(get()) }
 
     viewModel { UpdatePasswordViewModel(get()) }
+    viewModel { PremiumViewModel(get(), get()) }
 }

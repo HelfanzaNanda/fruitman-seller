@@ -35,11 +35,12 @@ interface ProductContract {
     fun updatePhotoProduct(
         token: String,
         id: String,
-        pathImage: String,
+        images: Array<MultipartBody.Part?>,
         listener: SingleResponse<Product>
     )
 
     fun deleteProduct(token: String, id: String, listener: SingleResponse<Product>)
+    fun findProduct(token: String, id: String, listener: SingleResponse<Product>)
 }
 
 class ProductRepository(private val api: ApiService) : ProductContract {
@@ -53,7 +54,6 @@ class ProductRepository(private val api: ApiService) : ProductContract {
             .enqueue(object : Callback<WrappedResponse<Product>> {
                 override fun onFailure(call: Call<WrappedResponse<Product>>, t: Throwable) {
                     listener.onFailure(Error(t.message))
-                    println(Error(t.message))
                 }
 
                 override fun onResponse(
@@ -132,11 +132,11 @@ class ProductRepository(private val api: ApiService) : ProductContract {
             })
     }
 
-    override fun updatePhotoProduct(token: String, id: String, pathImage: String, listener: SingleResponse<Product>) {
-        val file = File(pathImage)
-        val requestBodyForFile = RequestBody.create(MediaType.parse("image/*"), file)
-        val image = MultipartBody.Part.createFormData("image", file.name, requestBodyForFile)
-        api.updatePhotoProduct(token, id.toInt(), image)
+    override fun updatePhotoProduct(token: String, id: String, images: Array<MultipartBody.Part?>, listener: SingleResponse<Product>) {
+//        val file = File(pathImage)
+//        val requestBodyForFile = RequestBody.create(MediaType.parse("image/*"), file)
+//        val image = MultipartBody.Part.createFormData("image", file.name, requestBodyForFile)
+        api.updatePhotoProduct(token, id.toInt(), images)
             .enqueue(object : Callback<WrappedResponse<Product>> {
                 override fun onFailure(call: Call<WrappedResponse<Product>>, t: Throwable) {
                     listener.onFailure(Error(t.message))
@@ -168,6 +168,25 @@ class ProductRepository(private val api: ApiService) : ProductContract {
                     else -> listener.onFailure(Error(response.message()))
                 }
             }
+        })
+    }
+
+    override fun findProduct(token: String, id: String, listener: SingleResponse<Product>) {
+        api.findProduct(token, id.toInt()).enqueue(object : Callback<WrappedResponse<Product>>{
+            override fun onFailure(call: Call<WrappedResponse<Product>>, t: Throwable) {
+                listener.onFailure(Error(t.message))
+            }
+
+            override fun onResponse(
+                call: Call<WrappedResponse<Product>>,
+                response: Response<WrappedResponse<Product>>
+            ) {
+                when{
+                    response.isSuccessful -> listener.onSuccess(response.body()!!.data)
+                    else -> listener.onFailure(Error(response.message()))
+                }
+            }
+
         })
     }
 }

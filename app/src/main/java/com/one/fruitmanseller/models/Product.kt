@@ -15,7 +15,7 @@ data class Product(
     @SerializedName("lat") var lat : String? = null,
     @SerializedName("lng") var lng : String? = null,
     @SerializedName ("status") var status : String? = null,
-    @SerializedName ("subdistrict_id") var subdistrict_id : String? = null,
+    @SerializedName ("sub_district_id") var subdistrict_id : String? = null,
     @SerializedName ("fruit_id") var fruit_id : String? = null,
     @SerializedName("images") var images : MutableList<ProductImage> = mutableListOf()
 ) : Parcelable

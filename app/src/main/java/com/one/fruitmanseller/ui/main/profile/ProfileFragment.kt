@@ -24,7 +24,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private var prefs = mutableListOf<Preference>().apply {
         add(Preference(1, R.string.update_profile, R.drawable.ic_person_black_24dp))
         add(Preference(2, R.string.update_password, R.drawable.ic_key))
-        add(Preference(3, R.string.logout, R.drawable.ic_navigate_next))
+        add(Preference(3, R.string.premium, R.drawable.ic_premium))
+        add(Preference(4, R.string.logout, R.drawable.ic_navigate_next))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,7 +50,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
-    private fun handleLoading(state: Boolean) = if (state) requireView().loading.visible() else requireView().loading.gone()
+    private fun handleLoading(state: Boolean) = if (state) requireView().loading?.visible() else requireView().loading?.gone()
     private fun handleUser(seller: Seller) {
         with(requireView()){
             seller.image?.let { imageUrl -> profile_image.load(imageUrl){ transformations(

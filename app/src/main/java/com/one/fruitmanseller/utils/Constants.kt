@@ -38,6 +38,34 @@ class Constants {
             pref.edit().clear().apply()
         }
 
+        fun setPremium(context: Context, premium : Boolean){
+            val pref = context.getSharedPreferences("USER", MODE_PRIVATE)
+            pref.edit().apply {
+                putBoolean("PREMIUM", premium)
+                apply()
+            }
+        }
+
+        fun getPremium(context: Context) : Boolean {
+            val s = context.getSharedPreferences("USER", MODE_PRIVATE)
+            val premium = s?.getBoolean("PREMIUM", false)
+            return premium!!
+        }
+
+        fun setOverload(context: Context, premium : Boolean){
+            val pref = context.getSharedPreferences("USER", MODE_PRIVATE)
+            pref.edit().apply {
+                putBoolean("OVERLOAD", premium)
+                apply()
+            }
+        }
+
+        fun getOverload(context: Context) : Boolean {
+            val s = context.getSharedPreferences("USER", MODE_PRIVATE)
+            val overload = s?.getBoolean("OVERLOAD", false)
+            return overload!!
+        }
+
         fun isValidEmail(email : String) = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
         fun isValidPassword(pass : String) = pass.length >= 8
 

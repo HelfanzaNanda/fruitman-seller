@@ -8,6 +8,18 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiService {
+
+    @GET("api/bank")
+    fun fetchBank() : Call<WrappedResponse<Bank>>
+
+    @Multipart
+    @POST("api/seller/premium")
+    fun premium(
+        @Header("Authorization") token : String,
+        @Part image : MultipartBody.Part
+    ) : Call<WrappedResponse<Seller>>
+
+
     @FormUrlEncoded
     @POST("api/seller/login")
     fun login(
@@ -96,11 +108,17 @@ interface ApiService {
     fun updatePhotoProduct(
         @Header("Authorization") token : String,
         @Path("id") id : Int,
-        @Part image : MultipartBody.Part
+        @Part images : Array<MultipartBody.Part?>
     ) :Call<WrappedResponse<Product>>
 
     @GET("api/seller/product/{id}/delete")
     fun deleteProduct(
+        @Header("Authorization") token : String,
+        @Path("id") id : Int
+    ) :Call<WrappedResponse<Product>>
+
+    @GET("api/seller/product/{id}/find")
+    fun findProduct(
         @Header("Authorization") token : String,
         @Path("id") id : Int
     ) :Call<WrappedResponse<Product>>
